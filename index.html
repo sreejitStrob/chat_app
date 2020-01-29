@@ -10,6 +10,8 @@
     <script src="https://js.pusher.com/5.0/pusher.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     
+    <script src="config.js"></script>
+
     <script>
       // Enable pusher logging - don't include this in production
       Pusher.logToConsole = true;
@@ -22,6 +24,7 @@
       var channel = pusher.subscribe('my-channel');
       channel.bind('my-event', function(data) {
         chat_display(data);
+        notifyMe(data);
       });
     </script>
 
@@ -48,7 +51,9 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 
     <script>
-     
+
+      console.log(config);
+
       $("#btn-chat").click(function() {
         sendMessage();
       });
@@ -62,12 +67,8 @@
       function sendMessage() {
         let message = $('#btn-input').val();
         if(message != '') {
-<<<<<<< HEAD
-          $.post( "chat.php", { message: message, name: 'vishal', color: '000'}).done(function() {
-=======
-          $.post( "chat.php", { message: message, name: 'sreejit', color: 'c9043'}).done(function() {
+          $.post( "chat.php", { message: message, name: config.name, color: config.color}).done(function() {
           console.log(message);
->>>>>>> c5f3ae8ffe436fab1394fa5a8a41688d2837e4ff
           $('#btn-input').val("");
         });
         }
@@ -91,31 +92,30 @@
               </div>
             </li>
         `);
-        notifyMe(context);
       }
-
-
-
-
 
       function notifyMe(context) {
 
-  if (!("Notification" in window)) {
-    alert("This browser does not support desktop notification");
-  }
+        let data = JSON.parse(context);
 
-  else if (Notification.permission === "granted") {
-    var notification = new Notification(context);
-  }
+        if(data.name != config.name) {
+          if (!("Notification" in window)) {
+            alert("This browser does not support desktop notification");
+          }
 
-  else if (Notification.permission !== "denied") {
-    Notification.requestPermission().then(function (permission) {
-      if (permission === "granted") {
-        var notification = new Notification(context);
+          else if (Notification.permission === "granted") {
+            var notification = new Notification(data.message);
+          }
+
+          else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then(function (permission) {
+              if (permission === "granted") {
+                var notification = new Notification(data.message);
+              }
+            });
+          }
+        }
       }
-    });
-  }
-}
     </script>
     
   </body>
