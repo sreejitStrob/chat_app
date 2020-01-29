@@ -43,10 +43,12 @@
           </div>
       </div>
     </div>  
-  
+    
+   
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 
     <script>
+     
       $("#btn-chat").click(function() {
         sendMessage();
       });
@@ -60,7 +62,12 @@
       function sendMessage() {
         let message = $('#btn-input').val();
         if(message != '') {
+<<<<<<< HEAD
           $.post( "chat.php", { message: message, name: 'vishal', color: '000'}).done(function() {
+=======
+          $.post( "chat.php", { message: message, name: 'sreejit', color: 'c9043'}).done(function() {
+          console.log(message);
+>>>>>>> c5f3ae8ffe436fab1394fa5a8a41688d2837e4ff
           $('#btn-input').val("");
         });
         }
@@ -83,8 +90,32 @@
                   <p>${data.message}</p>
               </div>
             </li>
-        `)
+        `);
+        notifyMe(context);
       }
+
+
+
+
+
+      function notifyMe(context) {
+
+  if (!("Notification" in window)) {
+    alert("This browser does not support desktop notification");
+  }
+
+  else if (Notification.permission === "granted") {
+    var notification = new Notification(context);
+  }
+
+  else if (Notification.permission !== "denied") {
+    Notification.requestPermission().then(function (permission) {
+      if (permission === "granted") {
+        var notification = new Notification(context);
+      }
+    });
+  }
+}
     </script>
     
   </body>
