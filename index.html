@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    
+    <title>Pusher Test</title>
+    
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://js.pusher.com/5.0/pusher.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    
+    <script>
+      // Enable pusher logging - don't include this in production
+      Pusher.logToConsole = true;
+
+      var pusher = new Pusher('7455a3c52b935d083656', {
+        cluster: 'ap2',
+        forceTLS: true
+      });
+
+      var channel = pusher.subscribe('my-channel');
+      channel.bind('my-event', function(data) {
+        //alert(JSON.stringify(data));
+        chat_display(JSON.stringify(data));
+      });
+    </script>
+
+  </head>
+  <body>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+          <span class="glyphicon glyphicon-comment"></span> Chat
+      </div>
+      <div class="panel-body">
+          <ul class="chat" id='chat'></ul>
+      </div>
+      <div class="panel-footer">
+          <div class="input-group">
+              <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+              <span class="input-group-btn">
+                  <button class="btn btn-warning btn-sm" id="btn-chat">Send</button>
+              </span>
+          </div>
+      </div>
+    </div>  
+  
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+    <script>
+      $("#btn-chat").click(function(){
+
+        let message = $('#btn-input').val();
+        $.post( "chat.php", { name: message,}).done(function() {
+          console.log(message);
+          $('#btn-input').val("");
+        });
+
+      });
+
+      function chat_display(context){
+        $('#chat').append(`
+        <li class="left clearfix">
+              <span class="chat-img pull-left">
+                <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
+              </span>
+              <div class="chat-body clearfix">
+                  <div class="header">
+                    <strong class="primary-font">You</strong> 
+                  </div>
+                  <p>${context}</p>
+              </div>
+            </li>
+        `);
+        if (!("Notification" in window)) {
+    alert("This browser does not support desktop notification");
+  }
+      }
+    </script>
+    
+  </body>
+</html>
