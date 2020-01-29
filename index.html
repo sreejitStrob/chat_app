@@ -21,8 +21,7 @@
 
       var channel = pusher.subscribe('my-channel');
       channel.bind('my-event', function(data) {
-        //alert(JSON.stringify(data));
-        chat_display(JSON.stringify(data));
+        chat_display(data);
       });
     </script>
 
@@ -61,26 +60,30 @@
       });
 
       function sendMessage() {
-
         let message = $('#btn-input').val();
-
-        $.post( "chat.php", { name: message,}).done(function() {
+        if(message != '') {
+          $.post( "chat.php", { message: message, name: 'sreejit', color: 'c9043'}).done(function() {
           console.log(message);
           $('#btn-input').val("");
         });
+        }
       }
 
       function chat_display(context) {
+
+        let data = JSON.parse(context);
+        console.log(data);
+
         $('#chat').append(`
           <li class="left clearfix">
               <span class="chat-img pull-left">
-                <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
+                <img src="http://placehold.it/50/${data.color}/fff&text=${(data.name).charAt(0)}" alt="User Avatar" class="img-circle" />
               </span>
               <div class="chat-body clearfix">
                   <div class="header">
-                    <strong class="primary-font">You</strong> 
+                    <strong class="primary-font">${data.name}</strong> 
                   </div>
-                  <p>${context}</p>
+                  <p>${data.message}</p>
               </div>
             </li>
         `);

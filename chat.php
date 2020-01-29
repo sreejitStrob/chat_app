@@ -12,7 +12,11 @@ if(isset($_POST['name'])){
     $options
   );
 
-  $data = $_POST['name'];
+  $data = json_encode([
+    'message' => $_POST['message'],
+    'name' => $_POST['name'],
+    'color' => $_POST['color']
+  ]);
   $pusher->trigger('my-channel', 'my-event', $data);
 }
 ?>
