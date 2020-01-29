@@ -62,10 +62,12 @@
 
         let message = $('#btn-input').val();
 
-        $.post( "chat.php", { name: message,}).done(function() {
+        if(message != '') {
+          $.post( "chat.php", { name: message,}).done(function() {
           console.log(message);
           $('#btn-input').val("");
         });
+        }
       }
 
       function chat_display(context) {
