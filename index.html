@@ -60,8 +60,7 @@
       function sendMessage() {
         let message = $('#btn-input').val();
         if(message != '') {
-          $.post( "chat.php", { message: message, name: 'vishal', color: 'c90435'}).done(function() {
-          console.log(message);
+          $.post( "chat.php", { message: message, name: 'vishal', color: '000'}).done(function() {
           $('#btn-input').val("");
         });
         }
