@@ -21,8 +21,7 @@
 
       var channel = pusher.subscribe('my-channel');
       channel.bind('my-event', function(data) {
-        //alert(JSON.stringify(data));
-        chat_display(JSON.stringify(data));
+        chat_display(data);
       });
     </script>
 
@@ -59,11 +58,9 @@
       });
 
       function sendMessage() {
-
         let message = $('#btn-input').val();
-
         if(message != '') {
-          $.post( "chat.php", { name: message,}).done(function() {
+          $.post( "chat.php", { message: message, name: 'vishal'}).done(function() {
           console.log(message);
           $('#btn-input').val("");
         });
@@ -71,6 +68,10 @@
       }
 
       function chat_display(context) {
+
+        let data = JSON.parse(context);
+        console.log(data);
+
         $('#chat').append(`
           <li class="left clearfix">
               <span class="chat-img pull-left">
@@ -78,9 +79,9 @@
               </span>
               <div class="chat-body clearfix">
                   <div class="header">
-                    <strong class="primary-font">You</strong> 
+                    <strong class="primary-font">${data.name}</strong> 
                   </div>
-                  <p>${context}</p>
+                  <p>${data.message}</p>
               </div>
             </li>
         `)
