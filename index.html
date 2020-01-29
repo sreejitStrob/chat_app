@@ -39,7 +39,7 @@
           <div class="input-group">
               <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
               <span class="input-group-btn">
-                  <button class="btn btn-warning btn-sm" id="btn-chat">Send</button>
+                  <button class="btn btn-warning btn-sm" id="btn-chat"><i class="glyphicon glyphicon-send"></i></button>
               </span>
           </div>
       </div>
@@ -48,19 +48,29 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 
     <script>
-      $("#btn-chat").click(function(){
+      $("#btn-chat").click(function() {
+        sendMessage();
+      });
+
+      $('#btn-input').on('keypress',function(e) {
+          if(e.which == 13) {
+            sendMessage();
+          }
+      });
+
+      function sendMessage() {
 
         let message = $('#btn-input').val();
+
         $.post( "chat.php", { name: message,}).done(function() {
           console.log(message);
           $('#btn-input').val("");
         });
+      }
 
-      });
-
-      function chat_display(context){
+      function chat_display(context) {
         $('#chat').append(`
-        <li class="left clearfix">
+          <li class="left clearfix">
               <span class="chat-img pull-left">
                 <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
               </span>
@@ -71,10 +81,7 @@
                   <p>${context}</p>
               </div>
             </li>
-        `);
-        if (!("Notification" in window)) {
-    alert("This browser does not support desktop notification");
-  }
+        `)
       }
     </script>
     
