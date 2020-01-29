@@ -44,10 +44,11 @@
           </div>
       </div>
     </div>  
-  
+    <button onclick="notifyMe()">Notify me!</button>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 
     <script>
+     
       $("#btn-chat").click(function() {
         sendMessage();
       });
@@ -81,8 +82,32 @@
                   <p>${context}</p>
               </div>
             </li>
-        `)
+        `);
+        notifyMe(context);
       }
+
+
+
+
+
+      function notifyMe(context) {
+
+  if (!("Notification" in window)) {
+    alert("This browser does not support desktop notification");
+  }
+
+  else if (Notification.permission === "granted") {
+    var notification = new Notification(context);
+  }
+
+  else if (Notification.permission !== "denied") {
+    Notification.requestPermission().then(function (permission) {
+      if (permission === "granted") {
+        var notification = new Notification(context);
+      }
+    });
+  }
+}
     </script>
     
   </body>
