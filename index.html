@@ -16,22 +16,6 @@
     
     <script src="config.js"></script>
 
-    <script>
-      // Enable pusher logging - don't include this in production
-      Pusher.logToConsole = true;
-
-      var pusher = new Pusher('7455a3c52b935d083656', {
-        cluster: 'ap2',
-        forceTLS: true
-      });
-
-      var channel = pusher.subscribe('my-channel');
-      channel.bind('my-event', function(data) {
-        chat_display(data);
-        notifyMe(data);
-      });
-    </script>
-
   </head>
   <body>
 

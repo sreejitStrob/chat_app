@@ -13,8 +13,12 @@
       '938995',
       $options
     );
-    
-    $data = json_encode($_POST);
-    $pusher->trigger('my-channel', 'my-event', $data);
+
+    $data = json_encode([
+      'name' => $_POST['name'],
+      'message' => $_POST['message'],
+      'color' => $_POST['color']
+    ]);
+    $pusher->trigger('chat-app', 'chat-message', $data);
   }
 ?>
