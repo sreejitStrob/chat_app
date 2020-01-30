@@ -19,6 +19,7 @@
       'message' => $_POST['message'],
       'color' => $_POST['color']
     ]);
+
     $pusher->trigger('chat-app', 'chat-message', $data);
   }
 ?>

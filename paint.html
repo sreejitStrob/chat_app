@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <script src="config.js"></script>
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+        }
+    </style>
+</head>
+
+<body data-rsssl=1>
+    <div id="paint" style="height: 100%;">
+        <canvas id="myCanvas"></canvas>
+    </div>
+
+
+    <script src="https://js.pusher.com/5.0/pusher.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script>
+
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('7455a3c52b935d083656', {
+            cluster: 'ap2',
+            forceTLS: true
+        });
+
+        var channel = pusher.subscribe('paint');
+        channel.bind('paint-xy', function(data) {
+            co = JSON.parse(data);
+            console.log(co);
+            ctx.beginPath();
+            if(co.name != config.name) {
+                drawLine(co.x, co.y);
+            }
+        });
+
+        var canvas = document.getElementById('myCanvas');
+        var ctx = canvas.getContext('2d');
+
+        var painting = document.getElementById('paint');
+        var paint_style = getComputedStyle(painting);
+        canvas.width = parseInt(paint_style.getPropertyValue('width'));
+        canvas.height = parseInt(paint_style.getPropertyValue('height'));
+
+        var mouse = { x: 0, y: 0 };
+
+        canvas.addEventListener('mousemove', function (e) {
+            mouse.x = e.pageX - this.offsetLeft;
+            mouse.y = e.pageY - this.offsetTop;
+        }, false);
+
+        ctx.lineWidth = 3;
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#00CC99';
+
+        canvas.addEventListener('mousedown', function (e) {
+            ctx.beginPath();
+            ctx.moveTo(mouse.x, mouse.y);
+
+            canvas.addEventListener('mousemove', onPaint, false);
+        }, false);
+
+        canvas.addEventListener('mouseup', function () {
+            canvas.removeEventListener('mousemove', onPaint, false);
+        }, false);
+
+        var onPaint = function () {
+            drawLine(mouse.x, mouse.y);
+            sendPoints(mouse.x, mouse.y)
+        };
+
+        function drawLine(x, y) {
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        }
+
+        function sendPoints(x, y) {
+            $.post(config.paintServer, { x: x, y: y, sender: config.name}).done(function () {
+                console.log('x : ' + x + ', Y : ' + y);
+            });
+        }
+    </script>
+</body>
+
+</html>
